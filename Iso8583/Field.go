@@ -60,6 +60,15 @@ func (fld *Field) Value() string {
 	return adjuster.Get(fld.fieldValue)
 }
 
+func (fld *Field) SubFieldValue(subField int) string {
+
+	if !fld.isComposite {
+		panic("Can not set a sub field value on a non composite field")
+	}
+
+	return fld.compositeValue.GetFieldValue(subField)
+}
+
 func (fld *Field) SetValue(value string)  {
 	adjuster := fld.fieldDescriptor.Adjuster()
 	if adjuster == nil {
@@ -67,6 +76,23 @@ func (fld *Field) SetValue(value string)  {
 	} else {
 		fld.fieldValue = adjuster.Set(value)
 	}
+
+	if !fld.fieldDescriptor.Validator().IsValid(fld.fieldValue) {
+		panic(fmt.Sprintf("the value '%s' is invalid for field [No. %d] expected format is '%s'", fld.fieldValue,fld.fieldNumber, fld.fieldDescriptor.Validator().Description()))
+	}
+
+	if !fld.fieldDescriptor.LengthFormatter().IsValidLength(fld.fieldDescriptor.Formatter().GetPackedLength(len(fld.fieldValue))) {
+		panic(fmt.Sprintf("The field length is not valid for field number [%d]",fld.fieldNumber))
+	}
+}
+
+func (fld *Field) SetSubFieldValue(subField int, value string)  {
+
+	if !fld.isComposite {
+		panic("Can not set a sub field value on a non composite field")
+	}
+
+	fld.compositeValue.SetFieldValue(subField,value)
 }
 
 func (fld *Field) ToMsg() []byte {

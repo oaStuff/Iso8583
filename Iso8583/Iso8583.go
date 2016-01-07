@@ -18,7 +18,51 @@ func NewIso8583WithTemplate(template TemplateDef) *Iso8583 {
 }
 
 
+func (msg *Iso8583) GetSubFieldValue(field, subField int) string {
+
+	if msg.Bitmap.IsFieldSet(field) {
+		return msg.Fields[field].SubFieldValue(subField)
+	}
+
+	return ""
+}
+
+func (msg *Iso8583) SetSubFieldValue(field, subField int, value string) error {
+
+	fld, err := msg.GetField(field)
+	if err != nil {
+		return err
+	}
+
+	fld.SetSubFieldValue(subField,value)
+	return nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func init()  {
+
+	field127Template := TemplateDef{
+		2	:	AsciiVar(2, 32, fieldValidator.Ans()),
+		3	:	AsciiFixed(48, fieldValidator.Ans()),
+		4	:	AsciiFixed(22, fieldValidator.Ans()),
+		5	:	AsciiFixed(73, fieldValidator.Ans()),
+		6	:	AsciiFixed(2, fieldValidator.An()),
+		7	:	AsciiVar(2, 70, fieldValidator.Ans()),
+	}
+
 	defaultTemplate = TemplateDef{
 		BIT_002_PAN 			:	AsciiVar(2, 19, fieldValidator.N()),
 		BIT_003_PROC_CODE		:	AsciiFixed(6, fieldValidator.N()),
@@ -94,5 +138,7 @@ func init()  {
 		BIT_103_ACCOUNT_ID_2	:	AsciiVar(2,28,fieldValidator.Ans()),
 		BIT_118_PAYMENTS_NUMBER	:	AsciiVar(3,30,fieldValidator.N()),
 		BIT_119_PAYMENTS_REVERSAL_NUMBER	:	AsciiVar(3,10,fieldValidator.N()),
+		BIT_123_				:	AsciiVar(3,15,fieldValidator.An()),
+		BIT_127_				:	CompositeField(6,999999,NewTemplate(field127Template)),
 	}
 }

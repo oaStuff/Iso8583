@@ -8,4 +8,6 @@ type IField interface  {
 	ToMsg() []byte
 	Unpack([]byte, int) (int, error)
 	ToString(string) string
+	SubFieldValue(int) string
+	SetSubFieldValue(int, string)
 }

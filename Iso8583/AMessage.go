@@ -9,14 +9,14 @@ import (
 type CreateFieldFunc func(int) IField
 
 type AMessage struct {
-	bitmap              *Bitmap
+	Bitmap              *Bitmap
 	MsgTemplate         *Template
-	fields              map[int]IField
+	Fields              map[int]IField
 	CreateFieldCallback CreateFieldFunc
 }
 
 func NewAMessage(tmpl *Template) *AMessage {
-	msg := &AMessage{MsgTemplate:tmpl,fields:make(map[int]IField),bitmap:NewBitmap(tmpl.BitmapFormatter)}
+	msg := &AMessage{MsgTemplate:tmpl, Fields:make(map[int]IField), Bitmap:NewBitmap(tmpl.BitmapFormatter)}
 	msg.CreateFieldCallback = msg.CreateField
 
 	return msg
@@ -24,10 +24,10 @@ func NewAMessage(tmpl *Template) *AMessage {
 
 func (msg *AMessage) PackedLength() int {
 
-	length := msg.bitmap.PackedLength()
+	length := msg.Bitmap.PackedLength()
 	for i := 2; i < 128; i++ {
-		if msg.bitmap.IsFieldSet(i) {
-			length += msg.fields[i].PackedLength()
+		if msg.Bitmap.IsFieldSet(i) {
+			length += msg.Fields[i].PackedLength()
 		}
 	}
 
@@ -35,24 +35,24 @@ func (msg *AMessage) PackedLength() int {
 }
 
 func (msg *AMessage) ClearField(field int)  {
-	msg.bitmap.SetField(field, false)
-	delete(msg.fields,field)
+	msg.Bitmap.SetField(field, false)
+	delete(msg.Fields,field)
 }
 
 func (msg *AMessage) IsFieldSet(field int) bool {
-	return msg.bitmap.IsFieldSet(field)
+	return msg.Bitmap.IsFieldSet(field)
 }
 
 func (msg *AMessage) ToMsg() []byte {
 
 	packedLength := msg.PackedLength()
 	data := make([]byte, packedLength)
-	bmap := msg.bitmap.ToMsg()
+	bmap := msg.Bitmap.ToMsg()
 	copy(data,bmap)
-	offset := msg.bitmap.PackedLength()
+	offset := msg.Bitmap.PackedLength()
 	for i := 2; i < 128; i++ {
-		if msg.bitmap.IsFieldSet(i) {
-			field := msg.fields[i]
+		if msg.Bitmap.IsFieldSet(i) {
+			field := msg.Fields[i]
 			copy(data[offset:],field.ToMsg())
 			offset += field.PackedLength()
 		}
@@ -68,7 +68,7 @@ func (msg *AMessage) String() string {
 func (msg *AMessage) ToString(prefix string) string  {
 	var buffer bytes.Buffer
 	for i:= 2; i < 128; i++ {
-		if msg.bitmap.IsFieldSet(i) {
+		if msg.Bitmap.IsFieldSet(i) {
 			buffer.WriteString(msg.FieldsToString(i, prefix) + "\n")
 		}
 	}
@@ -77,7 +77,7 @@ func (msg *AMessage) ToString(prefix string) string  {
 }
 
 func (msg *AMessage) FieldsToString(field int, prefix string) string {
-	return msg.fields[field].ToString(prefix)
+	return msg.Fields[field].ToString(prefix)
 }
 
 func (msg *AMessage) CreateField(field int) IField {
@@ -91,24 +91,24 @@ func (msg *AMessage) CreateField(field int) IField {
 
 func (msg *AMessage) GetField(field int) (IField,error) {
 
-	_, ok := msg.fields[field]
-	if (!msg.bitmap.IsFieldSet(field)) || (! ok) {
-		if msg.fields[field] = msg.CreateFieldCallback(field); msg.fields[field] != nil {
-			msg.bitmap.SetField(field, true)
+	_, ok := msg.Fields[field]
+	if (!msg.Bitmap.IsFieldSet(field)) || (! ok) {
+		if msg.Fields[field] = msg.CreateFieldCallback(field); msg.Fields[field] != nil {
+			msg.Bitmap.SetField(field, true)
 		} else {
 			return nil, errors.New(fmt.Sprintf("Unable to create field number %d. Possibly because template does not have a defination for the field",
 				field))
 		}
 	}
 
-	return msg.fields[field],nil
+	return msg.Fields[field],nil
 }
 
 func (msg *AMessage) Unpack(data []byte, startingOffset int) (int, error) {
 
-	offset := msg.bitmap.Unpack(data,startingOffset)
+	offset := msg.Bitmap.Unpack(data,startingOffset)
 	for i := 2; i < 128; i++ {
-		if msg.bitmap.IsFieldSet(i) {
+		if msg.Bitmap.IsFieldSet(i) {
 			field, err := msg.GetField(i)
 			if err != nil {
 				return 0, err
@@ -125,8 +125,8 @@ func (msg *AMessage) Unpack(data []byte, startingOffset int) (int, error) {
 
 func (msg *AMessage) GetFieldValue(field int) string {
 
-	if msg.bitmap.IsFieldSet(field) {
-		return msg.fields[field].Value()
+	if msg.Bitmap.IsFieldSet(field) {
+		return msg.Fields[field].Value()
 	}
 
 	return ""
@@ -147,4 +147,6 @@ func (msg *AMessage) SetFieldValue(field int, value string) error  {
 	fld.SetValue(value)
 	return nil
 }
+
+
 

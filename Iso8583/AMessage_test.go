@@ -3,14 +3,11 @@ import (
 	"testing"
 	"log"
 	"encoding/hex"
-	"fmt"
-	"com.aihe/Iso8583/Formatter"
 )
 
 func TestAMessage(t *testing.T)  {
 
-	d := formatter.BcdFormatter{}
-	fmt.Println(d.GetPackedLength(11))
+
 
 //	tmplDef := TemplateDef{
 //		2:AsciiVar(2,20,fieldValidator.N()),
@@ -24,7 +21,9 @@ func TestAMessage(t *testing.T)  {
 		t.Error(err)
 	}
 	msg.SetFieldValue(4,"4000")
-	msg.SetFieldValue(70,"AB1")
+	msg.SetFieldValue(70,"677")
+	msg.SetSubFieldValue(127,2,"999999999")
+	msg.SetSubFieldValue(127,6,"p1")
 	data := msg.ToMsg()
 	log.Printf("\n%s",msg.ToString(""))
 	log.Println("packed len is ", msg.PackedLength())
