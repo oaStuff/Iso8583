@@ -150,7 +150,7 @@ func (fd *FieldDescriptor) Display(prefix, fieldNumber, value string) string  {
 		fieldValue = "[" + value + "]"
 	}
 
-	return fmt.Sprintf("%s[%-8s %-4s %6s %04d] %03s %s",prefix,fd.lengthFormatter.Description(),
+	return fmt.Sprintf("%s[%-8s %-4s %6s %04d] %03s \t%s",prefix,fd.lengthFormatter.Description(),
 				fd.validator.Description(),fd.lengthFormatter.MaxLength(),
 				fd.formatter.GetPackedLength(len(value)), fieldNumber,fieldValue)
 }

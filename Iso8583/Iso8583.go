@@ -1,5 +1,8 @@
 package Iso8583
-import "com.aihe/Iso8583/FieldValidator"
+import (
+	"com.aihe/Iso8583/FieldValidator"
+	"com.aihe/Iso8583/Formatter"
+)
 
 var(
 	defaultTemplate TemplateDef
@@ -18,7 +21,81 @@ func NewIso8583WithTemplate(template TemplateDef) *Iso8583 {
 }
 
 
+func (msg *Iso8583) GetSubFieldValue(field, subField int) string {
+
+	if msg.Bitmap.IsFieldSet(field) {
+		return msg.Fields[field].SubFieldValue(subField)
+	}
+
+	return ""
+}
+
+func (msg *Iso8583) SetSubFieldValue(field, subField int, value string) error {
+
+	fld, err := msg.GetField(field)
+	if err != nil {
+		return err
+	}
+
+	fld.SetSubFieldValue(subField,value)
+	return nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 func init()  {
+
+	//defines Postilions field 127
+	field127Template := TemplateDef{
+		2	:	AsciiVar(2, 32, fieldValidator.Ans()),
+		3	:	AsciiFixed(48, fieldValidator.Ans()),
+		4	:	AsciiFixed(22, fieldValidator.Ans()),
+		5	:	AsciiFixed(73, fieldValidator.Ans()),
+		6	:	AsciiFixed(2, fieldValidator.An()),
+		7	:	AsciiVar(2, 70, fieldValidator.Ans()),
+		8	:	AsciiVar(3, 999, fieldValidator.Ans()),
+		9	:	AsciiVar(3, 255, fieldValidator.Ans()),
+		10	:	AsciiFixed(3, fieldValidator.N()),
+		11	:	AsciiVar(2, 32, fieldValidator.Ans()),
+		12	:	AsciiVar(2, 25, fieldValidator.Ans()),
+		13	:	AsciiFixed(17, fieldValidator.Ans()),
+		14	:	AsciiFixed(8, fieldValidator.Ans()),
+		15	:	AsciiVar(2, 29, fieldValidator.Ans()),
+		16	:	AsciiFixed(1, fieldValidator.Ans()),
+		17	:	AsciiVar(2, 50, fieldValidator.Ans()),
+		18	:	AsciiVar(2, 50, fieldValidator.Ans()),
+		19	:	AsciiFixed(31, fieldValidator.Ans()),
+		20	:	AsciiFixed(8, fieldValidator.N()),
+		21	:	AsciiVar(2, 12, fieldValidator.Ans()),
+		22	:	AsciiVar(5, 99999, fieldValidator.Ans()),
+		23	:	AsciiFixed(253, fieldValidator.Ans()),
+		24	:	AsciiVar(2, 28, fieldValidator.Ans()),
+		25	:	AsciiVar(4, 9999, fieldValidator.Ans()),
+		26	:	AsciiVar(2, 20, fieldValidator.Ans()),
+		27	:	AsciiFixed(1, fieldValidator.Ans()),
+		28	:	AsciiFixed(4, fieldValidator.N()),
+		29	:	BinaryFixed(40),
+		30	:	AsciiFixed(1, fieldValidator.Ans()),
+		31	:	AsciiVar(2, 11, fieldValidator.Ans()),
+		32	:	BinaryVar(2,33, formatter.Ascii()),
+		33	:	AsciiFixed(4, fieldValidator.N()),
+		34	:	AsciiFixed(2, fieldValidator.N()),
+		35	:	AsciiVar(2, 11, fieldValidator.Ans()),
+		39	:	AsciiFixed(2, fieldValidator.An()),
+	}
+
 	defaultTemplate = TemplateDef{
 		BIT_002_PAN 			:	AsciiVar(2, 19, fieldValidator.N()),
 		BIT_003_PROC_CODE		:	AsciiFixed(6, fieldValidator.N()),
@@ -94,5 +171,7 @@ func init()  {
 		BIT_103_ACCOUNT_ID_2	:	AsciiVar(2,28,fieldValidator.Ans()),
 		BIT_118_PAYMENTS_NUMBER	:	AsciiVar(3,30,fieldValidator.N()),
 		BIT_119_PAYMENTS_REVERSAL_NUMBER	:	AsciiVar(3,10,fieldValidator.N()),
+		BIT_123_				:	AsciiVar(3,15,fieldValidator.An()),
+		BIT_127_				:	CompositeField(6,999999,NewTemplate(field127Template)),
 	}
 }
