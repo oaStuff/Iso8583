@@ -82,8 +82,8 @@ func (msg *AMessage) FieldsToString(field int, prefix string) string {
 
 func (msg *AMessage) CreateField(field int) IField {
 
-	if _, ok := msg.MsgTemplate.template[field]; ok {
-		return NewField(field, msg.MsgTemplate.template[field])
+	if _, ok := msg.MsgTemplate.templateDefinition[field]; ok {
+		return NewField(field, msg.MsgTemplate.templateDefinition[field])
 	}
 
 	return nil

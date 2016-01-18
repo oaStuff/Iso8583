@@ -15,8 +15,8 @@ func NewCompositeMessage(tmpl *Template, compFieldNumber int) *CompositeMessage 
 
 func (msg *CompositeMessage) CreateField(field int) IField {
 
-	if _, ok := msg.MsgTemplate.template[field]; ok {
-		return NewSubField(field,msg.MsgTemplate.template[field],msg.CompositeFieldNumber)
+	if _, ok := msg.MsgTemplate.templateDefinition[field]; ok {
+		return NewSubField(field,msg.MsgTemplate.templateDefinition[field],msg.CompositeFieldNumber)
 	}
 
 	return nil

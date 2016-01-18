@@ -24,6 +24,7 @@ func TestAMessage(t *testing.T)  {
 	msg.SetFieldValue(70,"677")
 	msg.SetSubFieldValue(127,2,"999999999")
 	msg.SetSubFieldValue(127,6,"p1")
+	msg.SetSubFieldValue(127,34,"98")
 	data := msg.ToMsg()
 	log.Printf("\n%s",msg.ToString(""))
 	log.Println("packed len is ", msg.PackedLength())
