@@ -1,7 +1,7 @@
 package Iso8583
 import (
-	"com.aihe/Iso8583/FieldValidator"
-	"com.aihe/Iso8583/Formatter"
+	"github.com/oaStuff/Iso8583/FieldValidator"
+	"github.com/oaStuff/Iso8583/Formatter"
 )
 
 var(

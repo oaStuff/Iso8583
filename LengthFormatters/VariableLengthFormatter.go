@@ -1,9 +1,9 @@
 package lengthFormatters
 import (
-	"com.aihe/Iso8583/Formatter"
 	"strings"
 	"strconv"
-	"com.aihe/Iso8583/Utils"
+	"github.com/oaStuff/Iso8583/Formatter"
+	"github.com/oaStuff/Iso8583/Utils"
 )
 
 type VariableLengthFormatter struct  {

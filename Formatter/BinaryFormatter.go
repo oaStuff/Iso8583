@@ -1,8 +1,8 @@
 package formatter
 import (
-	"com.aihe/Iso8583/Validator"
 	"errors"
 	"encoding/hex"
+	"github.com/oaStuff/Iso8583/Validator"
 )
 
 type BinaryFormatter struct {

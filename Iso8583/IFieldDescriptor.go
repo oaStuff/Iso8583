@@ -1,8 +1,8 @@
 package Iso8583
 import (
-	"com.aihe/Iso8583/Formatter"
-	"com.aihe/Iso8583/LengthFormatters"
-	"com.aihe/Iso8583/FieldValidator"
+	"github.com/oaStuff/Iso8583/Formatter"
+	"github.com/oaStuff/Iso8583/LengthFormatters"
+	"github.com/oaStuff/Iso8583/FieldValidator"
 )
 
 type IFieldDescriptor interface  {

@@ -1,5 +1,8 @@
 package Iso8583
-import "com.aihe/Iso8583/Formatter"
+
+import (
+	"github.com/oaStuff/Iso8583/Formatter"
+)
 
 type TemplateDef map[int]IFieldDescriptor
 

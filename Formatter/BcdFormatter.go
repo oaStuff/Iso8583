@@ -1,7 +1,7 @@
 package formatter
 import (
-	"com.aihe/Iso8583/Utils"
 	"encoding/hex"
+	"github.com/oaStuff/Iso8583/Utils"
 )
 
 type BcdFormatter struct  {

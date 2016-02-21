@@ -1,5 +1,9 @@
 package validator
-import "com.aihe/Iso8583/FieldValidator"
+
+import (
+
+	"github.com/oaStuff/Iso8583/FieldValidator"
+)
 
 
 func IsHex(value string) bool {
