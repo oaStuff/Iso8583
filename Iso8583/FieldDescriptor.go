@@ -172,7 +172,7 @@ func (fd *FieldDescriptor) Pack(fieldNumber int, value string) ([]byte,error) {
 	lenOfLenInd := fd.lengthFormatter.LengthOfLengthIndicator()
 	lengthOfField := fd.formatter.GetPackedLength(len(value))
 	field := make([]byte,lenOfLenInd + lengthOfField)
-	fd.lengthFormatter.Pack(field,len(value),0)
+	fd.lengthFormatter.Pack(field, lengthOfField,0)
 	fieldData,_ := fd.formatter.GetBytes(value)
 	copy(field[lenOfLenInd:],fieldData)
 
